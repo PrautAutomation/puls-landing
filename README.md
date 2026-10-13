@@ -9,4 +9,6 @@ npm ci
 npm start
 ```
 
-Nasazení na GitHub Pages proběhne automaticky po pushi do větve `main`.
+## Nasazení
+
+GitHub Pages publikuje hotový statický build z větve `gh-pages`. Větev `main` obsahuje zdrojový kód; do `gh-pages` patří obsah složky `dist/puls-landing/browser` po úspěšném buildu.
