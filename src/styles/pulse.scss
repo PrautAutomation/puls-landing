@@ -1,0 +1,448 @@
+/**
+ * Pulse System — global animation utilities
+ *
+ * Source of truth: developer-handoff/component-library.html,
+ *                  developer-handoff/component-brand-accents.html,
+ *                  developer-handoff/PULS-pulse-system-pravidla.md
+ *
+ * Four intensity levels (pravidla §4):
+ *   Beacon — dominates viewport; max 1 at a time; hero / celebration
+ *   Halo   — breathing ring around primary CTA; 3–5 cycles, then silent
+ *   Ping   — small peripheral dot/badge; loop OK; ≤3 at a time
+ *   Quiet  — default (no animation); 90 % of UI
+ *
+ * Click-wave is separate from the Pulse hierarchy (see §Click-wave).
+ * All animations respect prefers-reduced-motion (≤240ms fallback or stopped).
+ *
+ * aria-hidden="true" must be set on purely decorative pulse pseudo-elements
+ * in the Angular component templates — this file cannot do that for you.
+ */
+
+// ── Keyframes ──────────────────────────────────────────────────────────────
+
+/**
+ * haloglow — Halo: breathing blur ring
+ * Used by .pulse-cta::before  (glow layer)
+ * 3–5 cycles driven by animation-iteration-count on the element.
+ */
+@keyframes haloglow {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+    filter: blur(14px);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+    filter: blur(18px);
+  }
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+    filter: blur(14px);
+  }
+}
+
+/**
+ * haloexpand — Halo: expanding ring
+ * Used by .pulse-cta::after  (ring layer)
+ */
+@keyframes haloexpand {
+  0% {
+    transform: scale(1);
+    opacity: 0.62;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.62;
+  }
+}
+
+/**
+ * pingpulse — Ping: small pulsing dot (infinite loop OK)
+ * Used by .pulse-dot, .pulse-badge::after
+ */
+@keyframes pingpulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--_ping-rgb), 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(var(--_ping-rgb), 0);
+  }
+}
+
+@keyframes pulseMeterSheen {
+  0% {
+    transform: translateX(-140%);
+  }
+  100% {
+    transform: translateX(260%);
+  }
+}
+
+@keyframes pulseSurfaceOnce {
+  0% {
+    opacity: 0.78;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+/**
+ * beaconsweep — Beacon: sonar sweep for hero / onboarding / celebration
+ * Used by .pulse-beacon::before (inner glow) + ::after (outer ring)
+ */
+@keyframes beaconsweep {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.8;
+  }
+  55% {
+    transform: scale(1.12);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.8;
+  }
+}
+
+@keyframes beaconring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  60% {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+}
+
+/**
+ * clickWave — interakční vrstva (sonarová vlna z bodu kliku)
+ * Driven via JS: span.click-wave injected into .click-wave-layer div.
+ * Duration: 420ms, easing: cubic-bezier(.16,1,.3,1)
+ * NOT part of pulse hierarchy — runs on every interactive click.
+ */
+@keyframes clickWave {
+  0% {
+    opacity: 0.88;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  62% {
+    opacity: 0.34;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(var(--wave-scale, 80));
+  }
+}
+
+/**
+ * clickWaveReduced — abbreviated version for prefers-reduced-motion
+ * Duration: ≤220ms, no large scale expansion.
+ */
+@keyframes clickWaveReduced {
+  0% {
+    opacity: 0.28;
+    transform: translate(-50%, -50%) scale(0.72);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+// ── Halo (.pulse-cta) ──────────────────────────────────────────────────────
+/**
+ * .pulse-cta — Halo level
+ *
+ * Apply to the PRIMARY CTA button in any given view (one per viewport).
+ * Angular usage: add class directly on the host element or via @HostBinding.
+ *
+ * Behaviour: 3–5 cycles after render / scroll-into-view, then silent.
+ * Implement cycle-count via animation-iteration-count: 4 (or JS class swap).
+ *
+ * DO NOT apply in an infinite loop — violates pravidla §Halo.
+ */
+.pulse-cta {
+  position: relative;
+  isolation: isolate;
+
+  // Glow layer (blur blob behind element)
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(141, 42, 243, 0.32) 0%,
+      rgba(34, 211, 238, 0.1) 55%,
+      transparent 72%
+    );
+    filter: blur(14px);
+    z-index: -1;
+    opacity: 0;
+    will-change: opacity, filter, transform;
+  }
+
+  // Expanding ring
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    border: 1.5px solid rgba(141, 42, 243, 0.5);
+    z-index: -1;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  &.is-halo-active::before {
+    animation: haloglow var(--pulse-rate, 2.2s) var(--ease-standard, cubic-bezier(0.4, 0, 0.2, 1))
+      infinite;
+  }
+
+  &.is-halo-active::after {
+    animation: haloexpand var(--pulse-rate, 2.2s) var(--ease-standard, cubic-bezier(0.4, 0, 0.2, 1))
+      infinite;
+  }
+
+  &.is-halo-quiet::before,
+  &.is-halo-quiet::after {
+    animation: none;
+    opacity: 0;
+    transition: opacity 240ms ease;
+  }
+}
+
+// ── Ping (.pulse-dot, .pulse-badge) ───────────────────────────────────────
+/**
+ * .pulse-dot — Ping level
+ *
+ * Small status indicator dot. Loop is acceptable (small, peripheral).
+ * Must carry sufficient static contrast even without animation.
+ * Add aria-hidden="true" on purely decorative usage.
+ *
+ * Default ping colour: --pulse-c2 (cyan). Override via --_ping-rgb.
+ * Example: style="--_ping-rgb: 16,185,129" for emerald ping.
+ */
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pulse-c2, #22d3ee);
+  /* Default ping RGB for box-shadow keyframe */
+  --_ping-rgb: 34, 211, 238;
+  animation: pingpulse 1.6s ease-in-out infinite;
+  will-change: box-shadow;
+}
+
+/**
+ * .pulse-badge — Ping level on a badge/counter element.
+ * Adds a pulsing aura around the badge. The element itself must be visible
+ * without the aura (contrast requirement).
+ */
+.pulse-badge {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    border: 1.5px solid rgba(34, 211, 238, 0.55);
+    --_ping-rgb: 34, 211, 238;
+    animation: pingpulse 1.6s ease-in-out infinite;
+    will-change: box-shadow;
+    pointer-events: none;
+  }
+}
+
+.pulse-meter {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 38%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+    transform: translateX(-140%);
+    animation: pulseMeterSheen 2.6s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+}
+
+.pulse-surface-once {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at var(--local-x, 50%) var(--local-y, 50%),
+      rgba(255, 255, 255, 0.16),
+      rgba(141, 42, 243, 0.14) 32%,
+      transparent 62%
+    );
+    pointer-events: none;
+    animation: pulseSurfaceOnce 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+// ── Beacon (.pulse-beacon) ─────────────────────────────────────────────────
+/**
+ * .pulse-beacon — Beacon level
+ *
+ * MAXIMUM ONE per viewport at a time. If Beacon is present, all Halo
+ * elements must be downgraded to Ping or Quiet (pravidla §Beacon rule).
+ *
+ * Use: hero visual, onboarding moment, tier-completion celebration.
+ * This is a container class; inner .pulse-beacon__core carries the content.
+ */
+.pulse-beacon {
+  position: relative;
+  isolation: isolate;
+
+  // Inner core sweep (violet)
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(141, 42, 243, 0.28) 0%,
+      rgba(34, 211, 238, 0.1) 50%,
+      transparent 70%
+    );
+    filter: blur(20px);
+    z-index: -1;
+    animation: beaconsweep 3s var(--ease-standard, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+    will-change: transform, opacity;
+  }
+
+  // Outer sonar ring (cyan)
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -24px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(34, 211, 238, 0.4);
+    z-index: -1;
+    animation: beaconring 3s var(--ease-standard, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+    will-change: transform, opacity;
+  }
+}
+
+// ── Click-wave layer ───────────────────────────────────────────────────────
+/**
+ * .click-wave-layer — fixed overlay; injected once in AppComponent.
+ * Individual .click-wave spans are added/removed via JS on every click.
+ * aria-hidden="true" MUST be set on .click-wave-layer in the template.
+ */
+.click-wave-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+.click-wave {
+  position: absolute;
+  left: var(--wave-x);
+  top: var(--wave-y);
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(141, 42, 243, 0.3) 34%,
+    rgba(141, 42, 243, 0.08) 62%,
+    transparent 72%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow: 0 0 36px rgba(141, 42, 243, 0.28);
+  opacity: 0.9;
+  transform: translate(-50%, -50%) scale(0);
+  will-change: transform, opacity;
+  animation: clickWave 420ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+// Ripple source glow — brief accent outline on the element that was clicked.
+.is-ripple-source {
+  outline: 1px solid rgba(141, 42, 243, 0.52);
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 1px rgba(141, 42, 243, 0.12),
+    0 0 28px rgba(141, 42, 243, 0.2);
+}
+
+// ── prefers-reduced-motion ─────────────────────────────────────────────────
+/**
+ * WCAG 2.1 SC 2.3.3: all animations stopped or ≤240ms under reduced-motion.
+ *
+ * Halo / Beacon: animation-duration collapsed → effectively instant, no loop.
+ * Ping: animation removed entirely — static dot remains visible.
+ * Click-wave: replaced by abbreviated 220ms keyframe (no large scale).
+ */
+@media (prefers-reduced-motion: reduce) {
+  // Collapse Halo cycling
+  .pulse-cta::before,
+  .pulse-cta::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+
+  // Remove Ping loop; keep static dot visible for informational value
+  .pulse-dot {
+    animation: none;
+  }
+
+  .pulse-badge::after {
+    animation: none;
+  }
+
+  .pulse-meter::after,
+  .pulse-surface-once::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  // Collapse Beacon
+  .pulse-beacon::before,
+  .pulse-beacon::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+
+  // Replace click-wave with abbreviated version (≤220ms, no large expansion)
+  .click-wave {
+    width: 88px;
+    height: 88px;
+    animation: clickWaveReduced 220ms ease-out forwards;
+  }
+}

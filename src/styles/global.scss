@@ -1,0 +1,41 @@
+// Global base styles — Pulse System rebrand.
+// Tokens are loaded via angular.json styles[] BEFORE this file:
+//   tokens.css  (canonical --surface-*, --text-*, --accent, --pulse-c1/c2/c3)
+//   tokens.scss (legacy --puls-* aliases for backward compatibility)
+//
+// Pulse animation utilities are imported below.
+
+// Import pulse system utilities (Halo, Ping, Beacon, click-wave, keyframes).
+// Must come after tokens so var() references resolve correctly.
+@use 'pulse';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(141, 42, 243, 0.12), transparent 34%),
+    radial-gradient(circle at 84% 10%, rgba(66, 153, 225, 0.1), transparent 30%),
+    linear-gradient(180deg, #171a33 0%, var(--surface-0) 46%, #101427 100%);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+* {
+  box-sizing: border-box;
+}

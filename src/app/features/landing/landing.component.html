@@ -1,0 +1,465 @@
+<div class="puls-landing">
+  <a href="#headline" class="skip-link">Přeskočit na obsah</a>
+  <div id="page-vignette" aria-hidden="true"></div>
+
+  <div
+    id="puls-thread"
+    class="puls-thread-v0"
+    [class.is-reduced]="isReducedMotion"
+    [attr.data-state]="threadState"
+    aria-hidden="true"
+  >
+    <svg class="thread-svg" viewBox="0 0 520 960" preserveAspectRatio="none">
+      <defs>
+        <filter
+          id="fiber-glow"
+          x="-120%"
+          y="-20%"
+          width="340%"
+          height="140%"
+          color-interpolation-filters="sRGB"
+        >
+          <feGaussianBlur stdDeviation="2.8" result="soft"></feGaussianBlur>
+          <feColorMatrix
+            in="soft"
+            type="matrix"
+            values="1 0 0 0 0.55  0 1 0 0 0.16  0 0 1 0 0.95  0 0 0 0.65 0"
+          ></feColorMatrix>
+          <feMerge>
+            <feMergeNode></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
+        <filter
+          id="gold-halo"
+          x="-180%"
+          y="-20%"
+          width="460%"
+          height="140%"
+          color-interpolation-filters="sRGB"
+        >
+          <feGaussianBlur stdDeviation="34"></feGaussianBlur>
+        </filter>
+      </defs>
+      <path id="threadGoldPath" class="thread-gold" d=""></path>
+      <g id="threadFiberLayer" class="thread-layer"></g>
+    </svg>
+    <div class="safari-thread-strands" aria-hidden="true">
+      <span class="safari-strand strand-violet"></span>
+      <span class="safari-strand strand-gold"></span>
+      <span class="safari-strand strand-cyan"></span>
+      <span class="safari-strand strand-violet"></span>
+      <span class="safari-strand strand-gold"></span>
+      <span class="safari-strand strand-violet"></span>
+      <span class="safari-strand strand-cyan"></span>
+    </div>
+  </div>
+
+  <nav id="nav-fixed" class="is-visible is-settled" aria-label="Hlavní navigace">
+    <a class="nav-brand" href="#hero" aria-label="PULS" (click)="scrollToLandingIntro($event)">
+      <span class="nav-logo" aria-hidden="true">
+        <img src="assets/landing/puls1sekl.svg" alt="" />
+      </span>
+      <span class="mono">PULS</span>
+    </a>
+
+    <div class="nav-title mono" aria-hidden="true">
+      <span class="nav-title-word nav-title-word-left">PULS</span>
+      <span class="nav-title-dot">·</span>
+      <span class="nav-title-word nav-title-word-right">AKADEMIE</span>
+    </div>
+
+    <div class="nav-pill" role="list" aria-label="Rychlá navigace">
+      <a class="nav-pill-item" href="#selektor" role="listitem">
+        <svg class="nav-pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="m15.5 8.5-2.1 4.9-4.9 2.1 2.1-4.9 4.9-2.1Z"></path>
+        </svg>
+        <span>Kde začít</span>
+      </a>
+      <a class="nav-pill-item" href="mailto:akademie@praut.cz?subject=PULS%20Akademie%20%E2%80%94%20dotaz" role="listitem">
+        <svg class="nav-pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+          <path d="m10 17 5-5-5-5"></path>
+          <path d="M15 12H3"></path>
+        </svg>
+        <span>Napsat nám</span>
+      </a>
+      <a class="nav-pill-item nav-pill-signup" href="mailto:akademie@praut.cz?subject=PULS%20Akademie%20%E2%80%94%20z%C3%A1jem%20o%20kurz" role="listitem">
+        <svg class="nav-pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+        <span>Chci kurz</span>
+      </a>
+      <a
+        class="nav-pill-item nav-pill-contact"
+        href="mailto:tereza.svanda@praut.cz"
+        role="listitem"
+      >
+        <svg class="nav-pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 4h16v16H4z"></path>
+          <path d="m4 7 8 6 8-6"></path>
+        </svg>
+        <span>Kontakt</span>
+      </a>
+    </div>
+
+    <button
+      class="nav-menu-toggle"
+      type="button"
+      aria-label="Otevřít menu"
+      aria-controls="mobile-menu"
+      [attr.aria-expanded]="isMobileMenuOpen"
+      (click)="toggleMobileMenu()"
+    >
+      <svg class="nav-menu-chevron" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m6 9 6 6 6-6"></path>
+      </svg>
+    </button>
+  </nav>
+
+  <div id="mobile-menu" class="mobile-menu" [hidden]="!isMobileMenuOpen">
+    <div class="mobile-menu-panel" role="dialog" aria-modal="true" aria-label="Menu PULS">
+      <a class="mobile-menu-item" href="#selektor" (click)="closeMobileMenu()">
+        <span>Kde začít</span>
+        <span class="mobile-menu-meta mono">výběr úrovně</span>
+      </a>
+      <a class="mobile-menu-item" href="mailto:akademie@praut.cz?subject=PULS%20Akademie%20%E2%80%94%20dotaz" (click)="closeMobileMenu()">
+        <span>Napsat nám</span>
+        <span class="mobile-menu-meta mono">kontakt</span>
+      </a>
+      <a class="mobile-menu-item" href="mailto:akademie@praut.cz?subject=PULS%20Akademie%20%E2%80%94%20z%C3%A1jem%20o%20kurz" (click)="closeMobileMenu()">
+        <span>Chci absolvovat kurz</span>
+        <span class="mobile-menu-meta mono">poptávka</span>
+      </a>
+      <a
+        class="mobile-menu-item mobile-menu-contact"
+        href="mailto:tereza.svanda@praut.cz"
+        (click)="closeMobileMenu()"
+      >
+        <span>Kontakt</span>
+        <span class="mobile-menu-meta mono">tereza.svanda&#64;praut.cz</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="landing-main">
+    <section id="hero" class="moment hero-moment" aria-label="PULS">
+      <div
+        class="hero-logo-system logo-ready"
+        [class.hero-thread-emerging]="isHeroThreadVisible"
+        [class.hero-thread-dissolving]="isHeroThreadDissolving"
+        [attr.data-state]="renderedHeroLogoState"
+      >
+        <div class="hero-logo-aura" aria-hidden="true"></div>
+        <div class="hero-logo-pulse-halo" aria-hidden="true"></div>
+        <div class="hero-logo-emitter" aria-hidden="true"></div>
+        <div class="hero-thread-origin" aria-hidden="true"></div>
+        <div class="hero-signal-label mono" aria-hidden="true">PULS</div>
+        <div class="hero-logo">
+          <img src="assets/landing/puls1sekl.svg" alt="PULS" />
+        </div>
+      </div>
+      <div
+        class="hero-narrative-word mono"
+        [attr.data-word-index]="activeNarrativeWordIndex"
+        aria-live="polite"
+      >
+        @if (activeNarrativeWordIndex !== null) {
+          <span>{{ narrativeWords[activeNarrativeWordIndex] }}</span>
+        }
+      </div>
+      <div class="hero-pulse-area" aria-hidden="true"></div>
+    </section>
+
+    <section id="headline" class="moment text-moment">
+      <div class="content-wrap">
+        <div class="headline-micro-label mono" aria-label="Témata PULS Akademie">
+          <span>Claude</span>
+          <span aria-hidden="true">·</span>
+          <span>Workflow</span>
+          <span aria-hidden="true">·</span>
+          <span>Proces</span>
+          <span aria-hidden="true">·</span>
+          <span>Systém</span>
+          <span aria-hidden="true">·</span>
+          <span>Výstup</span>
+        </div>
+        <h1>Vyměň zahlcení za strukturu. <br class="line-break" />Volná hlava staví nejlíp.</h1>
+        <p>
+          Tvoje hlava nepotřebuje opravit, potřebuje uvolnit. Dáme ti technický impuls
+          a&nbsp;proces, který odfiltruje šum. Jasná mysl není cíl. Je to vedlejší produkt toho, že
+          máš <strong class="copy-emphasis">funkční systém</strong>.
+        </p>
+        <div class="cta-row headline-actions">
+          <a class="cta-primary cta-hero-primary" href="#selektor">Zjisti, kde začít</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem" class="moment text-moment">
+      <div class="content-wrap">
+        <h2>
+          Tvůj problém není&nbsp;kompetence. <br class="line-break" />Je&nbsp;to&nbsp;přetížená
+          hlava.
+        </h2>
+        <p>
+          Rychlý svět ti hlavu zavalil. Strach z&nbsp;termínů a&nbsp;pocit, že je toho moc, tě brzdí
+          v&nbsp;tom jediném, co se počítá &ndash; v&nbsp;tvoření. Ukážeme ti
+          <strong class="copy-emphasis">konkrétní mechanismy</strong>, jak balast z&nbsp;práce
+          odstranit, ne jak se s&nbsp;ním smířit. Jakmile přestaneš hasit, rozjedeš věci, na kterých
+          záleží.
+        </p>
+      </div>
+    </section>
+
+    <section id="breath-1" class="breath" aria-label="Přechod"></section>
+
+    <section id="reseni" class="moment text-moment">
+      <div class="content-wrap">
+        <h2>My dodáme strukturu. <br class="line-break" />Výstup a&nbsp;energie jsou tvoje.</h2>
+        <p>
+          AI tě nespasí. Ale <strong class="copy-emphasis">správně nasazený proces</strong> ti
+          rozváže ruce. Naučíš se delegovat zátěž na přesně definované procesy a&nbsp;získáš zpátky
+          to podstatné &ndash; analytický odstup, kontrolu nad daty a&nbsp;sebevědomí dotahovat
+          projekty do konce. My jsme jen puls. Hybatel jsi ty.
+        </p>
+      </div>
+    </section>
+
+    <section id="prechod" class="moment text-moment compact-moment">
+      <div class="content-wrap">
+        <h2>Odfiltruj šum. <br class="line-break" />Energii si nech na stavění.</h2>
+        <p>
+          Ten klid, který přijde, je jen prostor pro další stavění. Uvolni hlavu. To, co se
+          v&nbsp;ní rozhoří, je tvoje.
+        </p>
+      </div>
+    </section>
+
+    <section id="breath-2" class="breath breath-short" aria-label="Přechod do selektoru"></section>
+
+    <section id="selektor" class="moment selector-moment">
+      <div class="wide-wrap">
+        <div class="selector-intro">
+          <h2>Kde stojíš teď<span class="selector-question-mark">?</span></h2>
+          <p>Zvol si výchozí bod. Tvoje aktuální workflow určuje, jakým směrem pokračovat.</p>
+        </div>
+
+        <div class="tier-list" [class.has-selection]="activeTier" aria-label="Úrovně PULS">
+          @for (tier of tiers; track tier.key) {
+            <button
+              class="tier-band"
+              type="button"
+              [class.active]="activeTierKey === tier.key"
+              [attr.data-tier]="tier.key"
+              [attr.aria-pressed]="activeTierKey === tier.key"
+              [attr.aria-expanded]="activeTierKey === tier.key"
+              [attr.aria-controls]="'tier-detail-' + tier.key"
+              [attr.aria-label]="'Vybrat úroveň ' + tier.name"
+              (click)="selectTier(tier.key)"
+            >
+              <span class="tier-title">
+                <span class="tier-name">{{ tier.name }}</span>
+                <span class="tier-label-cs">{{ tier.labelCs }}</span>
+              </span>
+              <p class="tier-desc">{{ tier.description }}</p>
+              <svg class="tier-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+
+            @if (activeTierKey === tier.key) {
+              <div
+                class="reveal-card glass visible"
+                [id]="'tier-detail-' + tier.key"
+                [attr.data-tier-detail]="tier.key"
+              >
+                <div class="reveal-inner">
+                  <div class="reveal-header">
+                    <h3 class="reveal-name">{{ tier.name }}</h3>
+                    <p class="reveal-tagline">{{ tier.tagline }}</p>
+                  </div>
+                  <div class="reveal-block">
+                    <h4 class="reveal-label mono">CO DOSTANEŠ</h4>
+                    <p>{{ sharedOffer }}</p>
+                  </div>
+                  <div class="reveal-block">
+                    <h4 class="reveal-label mono">CO SI ODNESEŠ</h4>
+                    <ul class="odneses-list">
+                      @for (item of tier.takeaways; track item) {
+                        <li>
+                          <span class="rib"></span><span class="odneses-text">{{ item }}</span>
+                        </li>
+                      }
+                    </ul>
+                  </div>
+                  <div class="reveal-block reveal-price">
+                    <p class="price-main">5 000 Kč / osoba</p>
+                    <p class="price-sub">
+                      Garantujeme měřitelné výsledky. Podrobnosti v obchodních podmínkách.
+                    </p>
+                  </div>
+                  <div class="reveal-cta">
+                    <a
+                      class="cta-primary cta-contact"
+                      [href]="tierMailto('Zájem o kurz', tier.name)"
+                      >Chci absolvovat {{ tier.name }}</a
+                    >
+                    <a class="cta-secondary cta-contact" [href]="tierMailto('Dotaz', tier.name)"
+                      >Chci se nejdřív zeptat - nezávazně, ozveme se do 24 hodin</a
+                    >
+                  </div>
+                </div>
+                <div class="reveal-footer">
+                  <p class="mono">Není to tvoje úroveň? Zkus jinou odpověď.</p>
+                  <button
+                    class="reveal-collapse mono"
+                    type="button"
+                    (click)="collapseTier(tier.key)"
+                  >
+                    Zabalit úroveň ↑
+                  </button>
+                </div>
+              </div>
+            }
+          }
+        </div>
+
+        <div class="pojistka">
+          <p>
+            Nevíš, jaký je tvůj status? Ozveme se do 24 hodin a&nbsp;tvůj současný proces zmapujeme.
+          </p>
+          <a class="cta-secondary cta-contact" href="mailto:tereza.svanda@praut.cz"
+            >Nech nám kontakt</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <section id="certifikat" class="moment text-moment">
+      <div class="content-wrap">
+        <h2>Certifikát, který něco znamená.</h2>
+        <p>
+          Papír za odsezené hodiny nečekej. Certifikát získáš až ve chvíli, kdy prokážeš, že tvůj
+          nově postavený systém reálně funguje. Nejde nám o&nbsp;rozdávání vysvědčení, ale
+          o&nbsp;<strong class="copy-emphasis">funkční výstup</strong>. Právě proto má náš
+          certifikát skutečný význam. Pro tebe i&nbsp;pro kohokoliv, kdo ho uvidí ve tvém CV.
+        </p>
+      </div>
+    </section>
+
+    <section id="planner" class="moment planner-moment">
+      <div class="wide-wrap">
+        <div class="content-wrap">
+          <h2>Od zátěže k&nbsp;čistému workflow.</h2>
+          <p>
+            PULS není jen série hodin. Každý tier má vlastní osu práce, úkoly a&nbsp;výstupy.
+            Planner drží <strong class="copy-emphasis">celý proces pohromadě</strong>, abys přesně
+            viděla, kde jsi, co stavíš a&nbsp;co už máš za sebou.
+          </p>
+        </div>
+        <figure class="planner-frame glass" aria-label="Ukázka planneru">
+          <img
+            src="assets/landing/planner-proof.png"
+            width="3420"
+            height="2214"
+            alt="Ukázka PULS planneru s denními úkoly, body, stavem a kalendářem"
+          />
+        </figure>
+      </div>
+    </section>
+
+    <section id="nemluvis" class="moment text-moment">
+      <div class="content-wrap">
+        <h2>Nemluvíš se strojem.</h2>
+        <p>
+          Před startem dostaneš krátký dotazník. Není to test. Potřebujeme znát tvůj kontext,
+          abychom hodiny i&nbsp;příklady uzpůsobili tvojí praxi.
+        </p>
+        <p>
+          V&nbsp;průběhu tě vede <strong class="copy-emphasis">lektor</strong>, který tě
+          v&nbsp;živých hodinách reálně vidí. Pozná, kdo na sobě pracuje. A&nbsp;pokud potřebuješ
+          poradit mezi hodinami, máš <strong class="copy-emphasis">AI architekta</strong> &ndash;
+          člověka, který staví s&nbsp;AI denně a&nbsp;ví, kde se můžeš zadrhnout a&nbsp;proč.
+        </p>
+      </div>
+    </section>
+
+    <section id="tereza-quote" class="moment quote-moment">
+      <div class="utulek-smoke-field" id="utulekSmokeField" aria-hidden="true">
+        <canvas id="utulekSmokeCanvas"></canvas>
+      </div>
+      <div class="utulek-fallback-halo" id="utulekFallbackHalo" aria-hidden="true"></div>
+      <div class="quote-wrap" id="utulekQuoteCard">
+        <blockquote>
+          <p>
+            „Dostala jsem příležitost v&nbsp;podobě mentora a&nbsp;nástroje. Dneska vytvářím věci,
+            které mě dřív ani nenapadly. A&nbsp;jsem teprve na začátku."
+          </p>
+          <p class="quote-last-line">Tu samou možnost teď chceme dát dál.</p>
+        </blockquote>
+        <div class="quote-contact">
+          <p class="quote-note">Pokud máš pochybnosti, ozvi se&nbsp;mi.</p>
+          <p class="quote-credit mono">
+            &ndash; Tereza, zakladatelka ·
+            <a href="mailto:tereza.svanda@praut.cz">tereza.svanda&#64;praut.cz</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="breath-3" class="breath" aria-label="Přechod ke garanci"></section>
+
+    <section id="garance" class="moment text-moment">
+      <div class="content-wrap">
+        <h2>Stojíme za výsledkem.</h2>
+        <p>
+          Náš slib nestojí na pocitech. Pokud projdeš procesem a&nbsp;nedosáhneš na slíbený výstup,
+          <strong class="copy-emphasis">garance platí</strong>. Detaily, jak to řešíme, najdeš
+          v&nbsp;individuální dohodě před začátkem spolupráce.
+        </p>
+      </div>
+    </section>
+
+    <section id="sef" class="moment text-moment small-moment">
+      <div class="content-wrap">
+        <h2>Pokud kupuješ pro tým.</h2>
+        <p>
+          Dostaneš <strong class="copy-emphasis">přesná data</strong>. Po každém tieru jasně uvidíš,
+          jak je na tom každý z&nbsp;týmu, kdo proces reálně nasadil a&nbsp;co z&nbsp;toho má. Tvoje
+          investice se neztratí v&nbsp;dobrých úmyslech.
+        </p>
+        <p>Vše nastavíme dle dohody: počet lidí, fakturaci i&nbsp;harmonogram. Stačí napsat.</p>
+      </div>
+    </section>
+
+    <section id="finale" class="moment text-moment">
+      <div class="content-wrap">
+        <h2>Tohle není pro každého.</h2>
+        <p>
+          Tenhle proces se nemusí hodit zrovna teď. Jestli potřebuješ ověřit, zda ti PULS reálně
+          uvolní ruce, napiš nám. Žádný test, žádný tlak. Jen
+          <strong class="copy-emphasis">zmapujeme, kde stojíš</strong>.
+        </p>
+        <div class="cta-row">
+          <a class="cta-primary cta-contact" href="mailto:tereza.svanda@praut.cz">Napiš nám</a>
+          <a class="cta-secondary cta-return" href="#selektor">Nebo se vrať k&nbsp;výběru úrovně</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer id="footer">
+    <div class="footer-wrap mono">
+      <a class="footer-logo" href="#hero" aria-label="PULS" (click)="scrollToLandingIntro($event)">
+        <img src="assets/landing/pulssel.svg" alt="" />
+      </a>
+      <a href="mailto:akademie@praut.cz">akademie&#64;praut.cz</a>
+      <a href="mailto:akademie@praut.cz?subject=PULS%20Akademie%20%E2%80%94%20podm%C3%ADnky">Podmínky spolupráce</a>
+      <a href="mailto:akademie@praut.cz?subject=PULS%20Akademie%20%E2%80%94%20ochrana%20soukrom%C3%AD">Ochrana soukromí</a>
+      <span>Praut s.r.o.</span>
+    </div>
+  </footer>
+</div>

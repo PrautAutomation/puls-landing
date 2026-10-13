@@ -1,0 +1,59 @@
+/**
+ * Legacy --puls-* token namespace.
+ * DO NOT DELETE — may be imported by legacy component stylesheets.
+ *
+ * Values updated to match the Pulse System rebrand palette so
+ * old --puls-accent orange (#ff5a1f) does not conflict with the
+ * new violet (#8D2AF3) accent used in tokens.css and pulse.scss.
+ *
+ * Prefer the canonical tokens from tokens.css (--surface-*, --text-*,
+ * --accent, etc.) for all new component work. These --puls-* aliases
+ * exist only for backward compatibility and will be removed post-MVP.
+ */
+:root,
+[data-theme='dark'] {
+  /* Canvas */
+  --puls-bg: #121528; /* = --surface-0 */
+  --puls-bg-elev: #20243a; /* = --surface-1-solid */
+
+  /* Text */
+  --puls-fg: #f8faff; /* = --text-primary   */
+  --puls-fg-muted: #aeb8cc; /* = --text-muted     */
+
+  /* Accent — updated from orange to Pulse violet, matching --accent */
+  --puls-accent: #8d2af3;
+  --puls-accent-fg: #ffffff;
+
+  /* Border */
+  --puls-border: rgba(255, 255, 255, 0.12); /* = --color-border-soft */
+
+  /* Semantic */
+  --puls-success: #10b981; /* = --success  */
+  --puls-warning: #fbbf24; /* = --warning  */
+  --puls-danger: #f87171; /* = --error    */
+
+  /* Typography */
+  --puls-font-mono: 'IBM Plex Mono', 'Fira Code', monospace;
+
+  /* Radius — aligned to Pulse System handoff */
+  --puls-radius-sm: 6px;
+  --puls-radius-md: 10px;
+  --puls-radius-lg: 14px;
+
+  /* Spacing */
+  --puls-space-1: 4px;
+  --puls-space-2: 8px;
+  --puls-space-3: 12px;
+  --puls-space-4: 16px;
+  --puls-space-6: 24px;
+  --puls-space-8: 32px;
+}
+
+/* Light theme stub — not active in MVP, kept to avoid breaking imports. */
+[data-theme='light'] {
+  --puls-bg: #f7f7f5;
+  --puls-bg-elev: #ffffff;
+  --puls-fg: #14171c;
+  --puls-fg-muted: #565d68;
+  --puls-border: #d9dce0;
+}
